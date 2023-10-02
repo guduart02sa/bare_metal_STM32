@@ -1,0 +1,3 @@
+Pour lancer:
+
+arm-none-eabi-gdb -x se203.gdb xxx.elf
