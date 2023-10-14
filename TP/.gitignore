@@ -1,3 +1,4 @@
 led.c
 led.h
 led.o
+.vscode
