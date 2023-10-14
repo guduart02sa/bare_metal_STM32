@@ -1,3 +1,5 @@
+#include "led.h"
+
 int test_bss = 0;
 
 int fibo(int n){
@@ -6,7 +8,14 @@ int fibo(int n){
 }
 
 int main(){
-    fibo(8);
-    test_bss = test_bss + 3;
+    led_init();
+    while(1){
+        led(LED_GREEN);
+        for(int i = 0; i<100000;i++);
+        led(LED_YELLOW);
+        for(int i = 0; i<100000;i++);
+        led(LED_BLUE);
+        for(int i = 0; i<100000;i++);
+    }
     return 0;
 }
