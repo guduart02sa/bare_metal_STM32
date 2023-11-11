@@ -1,5 +1,6 @@
 #include "led.h"
 
+/*
 #define RCC_AHB2ENR *(uint32_t*)0x4002104C
 
 #define GPIOB_MODER *(uint32_t*)0x48000400
@@ -17,48 +18,47 @@
 
 #define GPIOC_ENTREE 0b11111111111100111111111111111111                        //MODE 9 entree
 #define GPIOC_SORTIE 0b11111111111101111111111111111111                        //MODE 9 sortie
-
+*/
 
 // uint32_t *RCC_AHB2ENR = (uint32_t*)0x4002104C;                                   //ADDRESS AHB1 RCC
 // uint32_t *GPIOB_MODER = (uint32_t*)0x48000400;                                   //ADDRESS GPIO B
 
 
 void clock_init(){
-    RCC_AHB2ENR = RCC_AHB2_VALUE;
+    RCC->AHB2ENR = RCC_AHB2_VALUE;
 }
 
 void led_init(){
     clock_init();
-    GPIOC_MODER = GPIOC_ENTREE;                                                 //METTRE GPIOC EN ENTREE
-    GPIOB_MODER = GPIOB_VALUE;
+    GPIOC->MODER = GPIOC_ENTREE;
+    GPIOB->MODER = GPIOB_VALUE;
 }
 
 void LED_g_on(){
-    GPIOB_BSRR = B_14_ALUMER;
+    GPIOB->BSRR = B_14_ALUMER;
 }
 
 void LED_g_off(){
-    GPIOB_BSRR = B_14_ETEINDRE;
+    GPIOB->BSRR = B_14_ETEINDRE;
 }
 
 void led(state desired){
     if(desired == LED_OFF){
-        GPIOC_MODER = GPIOC_ENTREE;                                                 //METTRE GPIOC EN ENTREE
+        GPIOC->MODER = GPIOC_ENTREE;                                                 //METTRE GPIOC EN ENTREE
         LED_g_off();
     }
     else if(desired == LED_YELLOW){
         LED_g_off();
-        GPIOC_MODER = GPIOC_SORTIE;
-        GPIOC_BSRR = (1<<9);
+        GPIOC->MODER = GPIOC_SORTIE;
+        GPIOC->BSRR = (1<<9);
     }
     else if(desired == LED_BLUE){
         LED_g_off();
-        GPIOC_MODER = GPIOC_SORTIE;
-        GPIOC_BSRR = (1<<25);
+        GPIOC->MODER = GPIOC_SORTIE;
+        GPIOC->BSRR = (1<<25);
     }
     else if(desired == LED_GREEN){
-        GPIOC_MODER = GPIOC_ENTREE;                                                 //METTRE GPIOC EN ENTREE
+        GPIOC->MODER = GPIOC_ENTREE;                                                 //METTRE GPIOC EN ENTREE
         LED_g_on();
     }
 }
-
