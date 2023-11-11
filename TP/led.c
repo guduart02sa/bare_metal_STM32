@@ -25,13 +25,13 @@
 
 
 void clock_init(){
-    RCC->AHB2ENR = RCC_AHB2_VALUE;
+    RCC->AHB2ENR |= RCC_AHB2_VALUE;
 }
 
 void led_init(){
     clock_init();
-    GPIOC->MODER = GPIOC_ENTREE;
-    GPIOB->MODER = GPIOB_VALUE;
+    GPIOC->MODER |= GPIOC_ENTREE;
+    GPIOB->MODER |= GPIOB_VALUE;
 }
 
 void LED_g_on(){
