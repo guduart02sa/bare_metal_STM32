@@ -95,7 +95,7 @@ void deactivate_rows() {
     ROW7(0);
 }
 
-void activate_row(int row) {
+void activate_row(int row){
     switch(row) {
         case 0: ROW0(1); break;
         case 1: ROW1(1); break;
@@ -109,7 +109,7 @@ void activate_row(int row) {
     }
 }
 
-void send_byte(uint8_t val, int bank) {
+void send_byte(uint8_t val, int bank){
     SB(bank);
     uint8_t ctr = 5;
     if(bank) ctr = 7;
@@ -119,24 +119,25 @@ void send_byte(uint8_t val, int bank) {
     }
 }
 
-void mat_set_row(int row, const rgb_color *val) {
+void mat_set_row(int row, const rgb_color *val){
     for(int i = 7; i >= 0; i--) {
         send_byte(val[i].b, 1);
         send_byte(val[i].g, 1);
         send_byte(val[i].r, 1);
     }
-    activate_row(row);
+    deactivate_rows();
     pulse_LAT();
+    activate_row(row);
 }
 
-void init_bank0() {
+void init_bank0(){
     for(int i = 0; i < 24; i++) {       //24 since we fill send 6 bits at each send_byte call when dealing with bank 0
         send_byte(0xFF, 0);
     }
     pulse_LAT();
 }
 
-void test_pixels() {
+void test_pixels(){
     rgb_color val[8];
     for(int color = 0; color < 3; color++) {
         for(int intensity = 0; intensity < 256; intensity++) {
@@ -147,8 +148,18 @@ void test_pixels() {
             }
             for(int row = 0; row < 8; row++) {
                 mat_set_row(row, val);
-                    for(uint32_t i = 0; i < 100000; i++) asm volatile("nop");
+                    for(uint32_t i = 0; i < 10000; i++) asm volatile("nop");
             }
         }
+    }
+}
+
+extern const uint8_t _binary_image_raw_start[];
+
+void test_image(){
+    const rgb_color* image_data = (const rgb_color*)_binary_image_raw_start;
+
+    for (int row = 0; row < 8; row++) {
+        mat_set_row(row, &image_data[row * 8]);
     }
 }

@@ -10,5 +10,6 @@
 void matrix_init();
 void test_pixels();
 void init_bank0();
+void test_image();
 
 #endif

@@ -13,7 +13,7 @@ void config(){
 int main(){
     config();
     while(1){
-        test_pixels();
+        test_image();
     }
     return 0; 
 }
