@@ -34,12 +34,21 @@ void led_init(){
     GPIOB->MODER |= GPIOB_VALUE;
 }
 
+static uint8_t led_state = 0;
+
 void LED_g_on(){
     GPIOB->BSRR = B_14_ALUMER;
+    led_state = 1;
 }
 
 void LED_g_off(){
     GPIOB->BSRR = B_14_ETEINDRE;
+    led_state = 0;
+}
+
+void g_toggle() {
+    if (led_state)LED_g_off();
+    else LED_g_on();
 }
 
 void led(state desired){

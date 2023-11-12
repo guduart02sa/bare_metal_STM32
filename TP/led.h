@@ -28,6 +28,7 @@ void led_init(void);
 
 void LED_g_on(void);
 void LED_g_off(void);
+void g_toggle(void);
 
 void led(state);
 
