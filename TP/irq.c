@@ -1,4 +1,5 @@
 #include "irq.h"
+#include "uart.h"
 
 /* WEAK ATTRIBUTE SO IT CAN BE OVERWRITTEN */
 #define MAKE_DEFAULT_HANDLER(handler_name) \
@@ -103,7 +104,7 @@ MAKE_DEFAULT_HANDLER(FPU_IRQHandler)
 
 extern uint8_t _stack_start, _start;
 
-void * const vector_table[] = {
+void * const vector_table[] __attribute__((section(".IRQ"))) = {
     // Stack and Reset Handler
     &_stack_start,            /* Top of stack  (initial value of the SP register) */
     &_start,                  /* Reset handler (initial value of the PC register) */

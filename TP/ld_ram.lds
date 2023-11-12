@@ -7,9 +7,12 @@ MEMORY
 }
 
 SECTIONS {
+  .IRQ :{
+    *(.irq)
+  } > SRAM1
   .text : {
     *(.text) 
-  } > SRAM1
+  }
     .rodata :
   {
     *(.rodata)

@@ -1,4 +1,5 @@
 #include "buttons.h"
+#include "uart.h"
 
 /*
 To configure a line as an interrupt source, use the following procedure:
@@ -17,7 +18,7 @@ void button_init(){
 
     EXTI->IMR1 |= EXTI_IMR1_IM13;
     EXTI->RTSR1 |= EXTI_RTSR1_RT13;
-    EXTI->FTSR1 |= EXTI_FTSR1_FT13;
+//    EXTI->FTSR1 |= EXTI_FTSR1_FT13;
     
     NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
@@ -25,4 +26,5 @@ void button_init(){
 void EXTI15_10_IRQHandler(){
     EXTI->PR1 |= EXTI_PR1_PIF13;
     g_toggle();
+//    uart_putchar('c');
 }

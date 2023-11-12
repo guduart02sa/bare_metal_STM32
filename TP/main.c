@@ -17,8 +17,8 @@ void config(){
 int main(){
     config();
     while(1){
-        uart_putchar('a');
-//        test_image();
+//        uart_putchar('a');
+        test_image();
     }
     return 0; 
 }
