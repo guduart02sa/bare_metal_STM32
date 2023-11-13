@@ -10,7 +10,7 @@ EXECFILES = $(filter-out clocks.o, $(wildcard *.o *.elf))
 
 all: main
 
-main: main.o crt0.o init.o memfuncs.o led.o clocks.o uart.o matrix.o image.o irq.o buttons.o
+main: main.o crt0.o init.o memfuncs.o led.o clocks.o uart.o matrix.o image.o irq.o buttons.o timer.o
 
 image.o: image.raw
 	$(OBJ) -I binary -O elf32-littlearm -B arm image.raw image.o

@@ -75,7 +75,7 @@ void USART1_IRQHandler(void){
     uint8_t received_byte = uart_getchar();
     if(USART1->ISR & USART_ISR_ORE || USART1->ISR & USART_ISR_FE){
         USART1->ICR |= USART_ICR_ORECF | USART_ICR_FECF;        //Clear flags
-//        USART1->RQR |= USART_RQR_RXFRQ;                         //Flush (not needed I think, since we're clearing the flags and ignoring the byte)
+        USART1->RQR |= USART_RQR_RXFRQ;                         //Flush (not needed I think, since we're clearing the flags and ignoring the byte)
         return;                                                 //Ignore this byte
     }
     if (received_byte == 0xFF){
