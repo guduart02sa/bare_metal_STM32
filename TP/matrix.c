@@ -142,9 +142,8 @@ void test_pixels(){
     }
 }
 
-uint8_t row = 0;
 void test_image(const rgb_color *image){
-    mat_set_row(row, &image[row * 8]);
-    if (row == 7) row = 0;
-    else row++;
+    for (int row = 0; row < 8; row++) {
+        mat_set_row(row, &image[row * 8]);
+    }
 }
