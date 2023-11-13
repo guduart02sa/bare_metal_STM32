@@ -6,7 +6,7 @@
 #include "buttons.h"
 #include "timer.h"
 
-volatile rgb_color frame_set[512];
+volatile rgb_color frame_set[192];
 
 void config(){
     led_init();

@@ -68,7 +68,7 @@ void uart_gets(char *s, size_t size){
     s[i] = '\0';
 }
 
-extern volatile uint8_t frame_set[512];
+extern volatile uint8_t frame_set[192];
 
 void USART1_IRQHandler(void){
     static uint16_t frame_index;

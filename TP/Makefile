@@ -3,10 +3,11 @@ AS=arm-none-eabi-as
 GDB=arm-none-eabi-gdb
 OBJ=arm-none-eabi-objcopy
 CFLAGS=-c -g -O2 -mcpu=cortex-m4 -I./CMSIS/Device/ST/STM32L4xx/Include -I./CMSIS/Include -Wall -Wextra -Werror -mthumb -ffreestanding -mfloat-abi=hard -mfpu=fpv4-sp-d16			#Enters the C flags
+CFLAGS_CLOCKS=-c -g -O1 -mcpu=cortex-m4 -I./CMSIS/Device/ST/STM32L4xx/Include -I./CMSIS/Include -Wall -Wextra -Werror -mthumb -ffreestanding -mfloat-abi=hard -mfpu=fpv4-sp-d16
 ASFLAGS=-g -mcpu=cortex-m4																									#Enters the S flags
 LDFLAGS=-T ld_ram.lds -nostdlib																								#Enters the loadscript flags
 
-EXECFILES = $(filter-out clocks.o, $(wildcard *.o *.elf))
+EXECFILES = $(wildcard *.o *.elf)
 
 all: main
 
@@ -14,6 +15,9 @@ main: main.o crt0.o init.o memfuncs.o led.o clocks.o uart.o matrix.o image.o irq
 
 image.o: image.raw
 	$(OBJ) -I binary -O elf32-littlearm -B arm image.raw image.o
+
+clocks.o: clocks.c
+	$(CC) $(CFLAGS_CLOCKS) -o $@ $<
 
 .PHONY: connect debug clean
 

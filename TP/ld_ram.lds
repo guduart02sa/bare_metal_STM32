@@ -2,30 +2,34 @@ ENTRY(_start)
 
 MEMORY
 {
-  SRAM1 (rwx) : org = 0x20000000, LENGTH = 96K
-  SRAM2 (rwx) : org = 0x10000000, LENGTH = 32K
+  FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 1M
+  SRAM1 (rwx) : ORIGIN = 0x20000000, LENGTH = 96K
+  SRAM2 (rwx) : ORIGIN = 0x10000000, LENGTH = 32K
 }
 
 SECTIONS {
   .IRQ :{
     *(.irq)
-  } > SRAM1
+  } > FLASH
   .text : {
     *(.text) 
-  }
-    .rodata :
+  } > FLASH
+  .rodata :
   {
     *(.rodata)
-  }
+  } > FLASH
   .data : {
-    *(.data) 
-  }
+    _data_start = .;
+    *(.data)
+    _data_end = .;
+  } >SRAM1 AT>FLASH
   .bss : {
     _bstart = .;
     *(.bss)
     _bend  = .;
-  }
-  .stack (NOLOAD) : {
-    _stack_start = .;
-  } > SRAM2
+  } > SRAM1
 }
+
+_stack_start = ORIGIN(SRAM2) + LENGTH(SRAM2);
+
+_data_LMA = LOADADDR(.data);
