@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "led.h"
 //PB6 E PB7
 
 void uart_init(int baudrate){
@@ -72,7 +73,11 @@ extern volatile uint8_t frame_set[512];
 void USART1_IRQHandler(void){
     static uint16_t frame_index;
     uint8_t received_byte = uart_getchar();
-    
+    if(USART1->ISR & USART_ISR_ORE || USART1->ISR & USART_ISR_FE){
+        USART1->ICR |= USART_ICR_ORECF | USART_ICR_FECF;        //Clear flags
+//        USART1->RQR |= USART_RQR_RXFRQ;                         //Flush (not needed I think, since we're clearing the flags and ignoring the byte)
+        return;                                                 //Ignore this byte
+    }
     if (received_byte == 0xFF){
         frame_index = 0;
         return;
