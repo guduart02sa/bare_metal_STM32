@@ -1,10 +1,10 @@
 #include "uart.h"
 //PB6 E PB7
 
-void uart_init(){
+void uart_init(int baudrate){
     USART1->CR1 &= ~USART_CR1_UE;
 
-    USART1->RQR |= USART_RQR_TXFRQ;
+//    USART1->RQR |= USART_RQR_TXFRQ;
 
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;        /* Configuration de les bits necessaires pour les ports B   */
     RCC->APB2ENR |= RCC_APB2ENR_USART1EN;       /* et le USART1.                                            */
@@ -21,12 +21,16 @@ void uart_init(){
     RCC->APB2RSTR |= RCC_APB2RSTR_USART1RST;
     RCC->APB2RSTR &= ~RCC_APB2RSTR_USART1RST;
 
-    USART1->BRR = 0x2B6;       //From oversampling table for USART
+//    USART1->BRR = 0x2B6;       //From oversampling table for USART
+    USART1->BRR = 80000000/baudrate;
+
 
     USART1->CR2 = 0;
-    
-    USART1->CR1 = (USART_CR1_TE|USART_CR1_RE|USART_CR1_UE);
-                /*METTRE A ZERO TOUS LE BITS À CR1, SAUF M1, OVER8 ET UE*/
+
+
+    USART1->CR1 = (USART_CR1_TE|USART_CR1_RE|USART_CR1_UE|USART_CR1_RXNEIE);
+
+    NVIC_EnableIRQ(USART1_IRQn);    
 }
 
 void uart_putchar(uint8_t c){
@@ -61,4 +65,17 @@ void uart_gets(char *s, size_t size){
         i++;
     }
     s[i] = '\0';
+}
+
+extern volatile uint8_t frame_set[512];
+
+void USART1_IRQHandler(void){
+    static uint16_t frame_index;
+    uint8_t received_byte = uart_getchar();
+    
+    if (received_byte == 0xFF){
+        frame_index = 0;
+        return;
+    } 
+    frame_set[frame_index++] = received_byte; //SANS ELSE, SI NON BOUCLE INFINIE
 }

@@ -1,11 +1,5 @@
 #include "matrix.h"
 
-typedef struct {
-  uint8_t r;
-  uint8_t g;
-  uint8_t b;
-} rgb_color;
-
 #define RST(x) if(x) GPIOC->BSRR = GPIO_BSRR_BS3; else GPIOC->BSRR = GPIO_BSRR_BR3;
 #define SB(x) if(x) GPIOC->BSRR = GPIO_BSRR_BS5; else GPIOC->BSRR = GPIO_BSRR_BR5;
 #define LAT(x) if(x) GPIOC->BSRR = GPIO_BSRR_BS4; else GPIOC->BSRR = GPIO_BSRR_BR4;
@@ -60,7 +54,6 @@ void matrix_init(){
                     GPIO_BSRR_BR_7 | GPIO_BSRR_BR_15;
     GPIOB->BSRR = GPIO_BSRR_BR0 | GPIO_BSRR_BR2;
 
-    for(uint32_t i = 0; i < 10000000; i++) asm volatile("nop");
     GPIOC->BSRR = GPIO_BSRR_BS_3;   // RST: 1 (SET DM163)
 
     init_bank0();
@@ -68,20 +61,14 @@ void matrix_init(){
 
 void pulse_SCK(){
     SCK(0);
-    asm volatile("nop");
     SCK(1);
-    asm volatile("nop");
     SCK(0);
-    asm volatile("nop");
 }
 
 void pulse_LAT(){
     LAT(1);
-    asm volatile("nop");
     LAT(0);
-    asm volatile("nop");
     LAT(1);
-    asm volatile("nop");
 }
 
 void deactivate_rows() {
@@ -126,6 +113,7 @@ void mat_set_row(int row, const rgb_color *val){
         send_byte(val[i].r, 1);
     }
     deactivate_rows();
+    for(uint8_t i = 0; i < 100; i++) asm volatile("nop");
     pulse_LAT();
     activate_row(row);
 }
@@ -154,12 +142,8 @@ void test_pixels(){
     }
 }
 
-extern const uint8_t _binary_image_raw_start[];
-
-void test_image(){
-    const rgb_color* image_data = (const rgb_color*)_binary_image_raw_start;
-
+void test_image(const rgb_color *image){
     for (int row = 0; row < 8; row++) {
-        mat_set_row(row, &image_data[row * 8]);
+        mat_set_row(row, &image[row * 8]);
     }
 }

@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stm32l4xx.h>
 
-void uart_init();
+void uart_init(int baudrate);
 void uart_putchar(uint8_t c);
 uint8_t uart_getchar();
 void uart_puts(const char *s);
